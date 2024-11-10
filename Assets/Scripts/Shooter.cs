@@ -17,7 +17,7 @@ public class Shooter
         _bullet = Object.Instantiate(_bulletPrefab, _aimTransform.position, _aimTransform.rotation);
         Rigidbody bulletRigidbody = _bullet.GetComponent<Rigidbody>();
 
-        bulletRigidbody.AddForce(_aimTransform.forward * 0.01f, ForceMode.Impulse);
+        bulletRigidbody.AddForce(_aimTransform.forward * 0.02f, ForceMode.Impulse);
         Object.Destroy(_bullet.gameObject, 5f);
     }
 }

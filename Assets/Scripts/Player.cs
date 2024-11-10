@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Player : Character, IDamageble
@@ -5,12 +6,13 @@ public class Player : Character, IDamageble
     [SerializeField] private Bullet _bulletPrefab;
     [SerializeField] private Transform _aimTransform;
 
+    public event Action OnDead;
+
     private const string _verticalAxis = "Vertical";
     private const string _horizontalAxis = "Horizontal";
        
     private float _xInput;
     private float _yInput;
-    private Vector3 _direction;
 
     private Shooter _shooter;
 
@@ -28,17 +30,20 @@ public class Player : Character, IDamageble
 
         if (Input.GetKeyDown(KeyCode.Space))
             _shooter.Shoot();
+    }    
+
+    public void TakeDamage(float damage)
+    {
+        _currentHealth -= damage;
+        //Debug.Log("Player " + _currentHealth);
+        if (_currentHealth < 0 )
+            OnDead?.Invoke();
     }
 
-    private void GetDirection()
+    protected override void GetDirection()
     {
         _xInput = Input.GetAxisRaw(_horizontalAxis);
         _yInput = Input.GetAxisRaw(_verticalAxis);
         _direction = new Vector3(_xInput, 0, _yInput).normalized;
-    }
-
-    public void TakeDamage(float damage)
-    {
-        
     }
 }

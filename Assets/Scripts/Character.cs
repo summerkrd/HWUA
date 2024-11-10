@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Character : MonoBehaviour
+public abstract class Character : MonoBehaviour
 {
     [SerializeField] protected float _speedForce = 100f;
     [SerializeField] protected float _maxHealth;
@@ -11,6 +11,8 @@ public class Character : MonoBehaviour
     protected CharacterRotator _rotator;
 
     protected float _currentHealth;
+
+    protected Vector3 _direction = Vector3.zero;
 
     protected void Awake()
     {
@@ -24,4 +26,6 @@ public class Character : MonoBehaviour
 
         _currentHealth = _maxHealth;
     }
+
+    protected abstract void GetDirection();    
 }

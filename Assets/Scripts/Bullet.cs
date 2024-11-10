@@ -12,5 +12,7 @@ public class Bullet : MonoBehaviour
 
         if (_damagebleObject != null)
             _damagebleObject.TakeDamage(_damage);
+
+        Destroy(gameObject);
     }
 }
