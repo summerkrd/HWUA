@@ -7,7 +7,8 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private Player _playerPrefab;
     [SerializeField] private Enemy _enemyPrefab;
-
+        
+    public event Action SpawnNewEnemy;
     public event Action KillEnemy;
 
     private Transform[] _spawnPoints;
@@ -49,7 +50,7 @@ public class GameManager : MonoBehaviour
         switch (_winConditions)
         {
             case WinConditions.LiveNSeconds:
-                _winner = new LiveNSeconds();
+                _winner = new LiveNSeconds(this);
                 _winner.Start();
                 _winner.Completed += YouWin;
                 break;
@@ -70,7 +71,7 @@ public class GameManager : MonoBehaviour
                 break;
 
             case LoseConditions.ToMuchEnemies:
-                _loser = new ToMuchEnemies(_enemyList);
+                _loser = new ToMuchEnemies(this);
                 _loser.Start();
                 _loser.Completed += YouLose;
                 break;
@@ -86,6 +87,8 @@ public class GameManager : MonoBehaviour
     {
         _enemyList.Add(_lastSpawnedEnemy);
 
+        SpawnNewEnemy?.Invoke();
+
         Debug.Log(_enemyList.Count);
         _lastSpawnedEnemy.Killed += RemoveEnemyFromList;
     }
@@ -99,11 +102,13 @@ public class GameManager : MonoBehaviour
     private void YouWin()
     {
         Time.timeScale = 0;
+        _winner.Disable();
         Debug.Log("YouWin");
     }
     private void YouLose()
     {
         Time.timeScale = 0;
+        _loser.Disable();
         Debug.Log("YouLose");
     }
 }

@@ -22,11 +22,14 @@ public class KillNEnemies : Conditions
         Debug.Log("KillNEnemies");
     }
 
-    public override void Disable()
+    private void OnKilledNeedsEnemies()
     {
         if (_killedEnemies > _needKillEnemies)
             Completed?.Invoke();
+    }
 
+    public override void Disable()
+    {
         _gameManager.KillEnemy -= () => _killedEnemies++;
     }
 }

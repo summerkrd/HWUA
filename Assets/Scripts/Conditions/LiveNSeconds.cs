@@ -1,27 +1,34 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class LiveNSeconds : Conditions
 {
     public override event Action Completed;
 
-    private float _timer = 0;
+    private GameManager _gameManager;
+
+    public LiveNSeconds(GameManager gameManager)
+    {
+        _gameManager = gameManager;
+    }
+
     private float _timeToNeedForWin = 30f;
 
     public override void Start()
     {
-        while (_timer <= _timeToNeedForWin)
-        {
+        _gameManager.StartCoroutine(OnCheckTime());
+    }
 
-            _timer += Time.deltaTime;
+    private IEnumerator OnCheckTime()
+    {
+        yield return new WaitForSecondsRealtime(_timeToNeedForWin);
 
-            Debug.Log(_timer);
-        }
+        Completed?.Invoke();
     }
 
     public override void Disable()
     {
-        if (_timer >= _timeToNeedForWin)
-            Completed?.Invoke();
+
     }
 }

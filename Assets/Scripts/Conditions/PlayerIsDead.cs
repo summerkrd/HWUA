@@ -14,14 +14,15 @@ public class PlayerIsDead : Conditions
 
     public override void Start()
     {
-        _player.OnDead += Disable;
+        _player.OnDead += OnPlayerDead;
 
         Debug.Log("PlayerIsDead");
     }
+    private void OnPlayerDead() => Completed?.Invoke();
 
     public override void Disable()
     {
-        Completed?.Invoke();
+        _player.OnDead -= OnPlayerDead;
     }
 
 }

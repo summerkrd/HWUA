@@ -6,23 +6,33 @@ public class ToMuchEnemies : Conditions
 {
     public override event Action Completed;
 
-    private List<Enemy> _enemyList;
-
+    private int _enemyCount = 0;
     private int _enemyMaxCount = 5;
 
-    public ToMuchEnemies(List<Enemy> enemyList)
+    private GameManager _gameManager;
+
+    public ToMuchEnemies(GameManager gameManager)
     {
-        _enemyList = enemyList;
+        _gameManager = gameManager;
     }
 
     public override void Start()
     {
         Debug.Log("ToMuchEnemies");
+
+        _gameManager.SpawnNewEnemy += OnSpawnEnemy;
+    }
+
+    private void OnSpawnEnemy()
+    {
+        _enemyCount++;
+
+        if (_enemyCount > _enemyMaxCount)
+            Completed?.Invoke();
     }
 
     public override void Disable()
     {
-        if (_enemyList.Count >= _enemyMaxCount)
-            Completed?.Invoke();
+        _gameManager.SpawnNewEnemy -= OnSpawnEnemy;
     }
 }
